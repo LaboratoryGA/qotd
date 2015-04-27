@@ -41,12 +41,16 @@ class Component extends TemplaterComponentTmpl {
 	];
 
 	public function Show($attributes) {
+		if (key_exists('PURGE', $_GET)) {
+			ClaCache::Delete('qotd');
+		}
+		
 		$options = array_merge(self::$DEFAULTS, $attributes);
 		
 		if (!($quote = ClaCache::Get('qotd'))) {
 			$quote = $this->retrieve();
 			
-			ClaCache::Set('qotd', $quote);
+			ClaCache::Set('qotd', $quote, 3600);
 		}
 		
 		$args = [
